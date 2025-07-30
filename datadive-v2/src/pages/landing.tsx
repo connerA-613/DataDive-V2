@@ -6,7 +6,7 @@ import Features from "../Sections/Features";
 
 const Landing = () => {
   return (
-    <div>
+    <div className="bg-white">
       <NavBar />
       <Hero />
       <HowItWorks />

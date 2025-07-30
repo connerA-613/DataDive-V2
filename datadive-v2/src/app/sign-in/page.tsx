@@ -1,27 +1,37 @@
-'useClient';
+'use client';
 
 import { Form } from "radix-ui";
 import { unstable_PasswordToggleField as PasswordToggleField } from "radix-ui";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 export default function LoginForm() {
     const supabase = useSupabaseClient();
     const [email, setEmail] = React.useState<string>("");
     const [password, setPassword] = React.useState<string>("");
+    const [viewError, setViewError] = React.useState<string | null>(null);
+    const router = useRouter();
 
-    const handleLogin = async () => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         const { error } = await supabase.auth.signInWithPassword({
             email,
             password,
         });
-
+        if (!email || !password) {
+            setViewError("Email and password are required");
+            return;
+        }
         if (error) {
             console.error("Login failed:", error.message);
+            setViewError("Login failed: " + error.message);
         } else {
             console.log("Login successful");
+            router.push("/dashboard"); // Redirect to dashboard after successful login
         }
     };
 
@@ -40,7 +50,7 @@ export default function LoginForm() {
                         </Form.Message>
                     </div>
                     <Form.Control asChild>
-                        <input className="w-full px-4 py-2 border-2 border-black rounded" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                        <input className="w-full px-4 py-2 border-2 border-black rounded text-black" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     </Form.Control>
                 </Form.Field>
                 <Form.Field className=" w-full mb-4" name="password">
@@ -51,10 +61,9 @@ export default function LoginForm() {
                         </Form.Message>
                     </div>
                     <Form.Control asChild>
-                        <div className="relative w-full">
                             <PasswordToggleField.Root>
-                                <div>
-                                <PasswordToggleField.Input className="w-full px-4 py-2 mr-2 border-2 border-black rounded" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                                <div className="relative w-full">
+                                <PasswordToggleField.Input className="w-full px-4 py-2 mr-2 border-2 border-black rounded text-black" value={password} onChange={(e) => setPassword(e.target.value)} required />
                                 <PasswordToggleField.Toggle className="absolute right-3 top-1/2 -translate-y-1/2">
                                     <PasswordToggleField.Icon
                                         visible={<EyeOpenIcon className="text-black w-5 h-10 ml-10"/>}
@@ -63,16 +72,26 @@ export default function LoginForm() {
                                 </PasswordToggleField.Toggle>
                                 </div>
                             </PasswordToggleField.Root>
-                        </div>
                     </Form.Control>
                 </Form.Field>
-                <button
-                type="submit"
-                className="w-full mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-                onClick={handleLogin}
-            >
-                Login
-            </button>
+                {viewError && <p className="text-red-500">{viewError}</p>}
+                <div className="flex items-center justify-between mb-4 gap-4">
+                    <button
+                    type="submit"
+                    className="w-full mt-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-300 transition-colorss"
+                    onClick={handleLogin}
+                    >
+                    Login
+                    </button>
+                    <Link
+                        className="w-full"
+                        href="/sign-up">
+                    <button
+                        className="w-full mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                        Sign Up
+                    </button>
+                    </Link>
+                </div>
             </Form.Root>
         </div>
     )

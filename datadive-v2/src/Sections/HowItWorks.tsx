@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 const HowItWorks = () => {
     return (
@@ -25,9 +26,9 @@ const HowItWorks = () => {
                 </div>
             </div>
             <div className="mt-12">
-                <button className="px-6 py-3 bg-gray-800 text-white rounded hover:bg-gray-500">
+                <Link href="/dashboard" className="inline-block px-6 py-3 bg-gray-800 text-white rounded hover:bg-gray-500">
                     Start Practicing Now
-                </button>
+                </Link>
             </div>
         </section>
 
