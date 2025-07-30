@@ -26,7 +26,7 @@ const features_list = [
 const Features = () => {
     return (
         <section className="py-16 px-6 max-w-screen-xl mx-auto mt-24">
-            <h2 className="text-3xl font-bold text-center mb-8">Features</h2>
+            <h2 className="text-3xl font-bold text-center mb-8 text-black">Features</h2>
             <p className="text-gray-600 text-center mb-12">
                 Explore the powerful features designed to help you ace your data analyst interviews.
             </p>
